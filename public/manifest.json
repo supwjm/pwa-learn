@@ -1,0 +1,15 @@
+{
+  "name": "da ming ming",
+  "short_name": "ming",
+  "start_url": "/?from=homescreen",
+  "theme_color": "#181743",
+  "background_color": "#181743",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "/images/huiju.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+  </head>
+  <body>
+    <h1>点击按钮发送消息</h1>
+    <input type="button" value="发送" id="sendBtn"/>
+
+    <script>
+    window.onload = function(){
+      let sendBtn = document.getElementById("sendBtn");
+
+      fetch('http://localhost:8086/notice')
+      console.log('发起notice')
+    }
+    </script>
+  </body>
+</html>

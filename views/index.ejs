@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style3.css?v=4' />
+    <link rel="manifest" href="/manifest.json">
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p><%= title %>  ming</p>
+
+    <form>
+      <p> 说话： <input type="text" name="content"  id="content"/></p>
+      <input type="button" value="提交" id="sendBtn"/>
+    </form>
+
+    <img src="/images/huoying.jpg"/>
+
+    <script src="/javascripts/test.js"></script>
+    <script src="/javascripts/idb-keyval.js"></script>
+    <script>
+    window.onload = function(){
+      var endpoint;
+      var key;
+      var authSecret;
+
+      function determineAppServerKey() {
+        var vapidPublicKey = 'BK_tayzPhTWTMxXeTHdoenICgqi1gitPXUXE-0iYql7LRzxEq_DhFtWQGL18gfmWLHyXdwDvXZePGtuHHIQ3fj4';
+        return urlBase64ToUint8Array(vapidPublicKey);
+      }
+
+      //兼容性检测
+      if ('serviceWorker' in navigator && 'SyncManager' in window) {
+        navigator.serviceWorker.register('/sw.js',{
+          scope:'/'
+        })
+        .then(function(registration) {
+          console.log('作用域：', registration.scope);
+
+          return registration.pushManager.getSubscription()
+          .then(function(subscription) {
+              console.log("subscription1111111111111",subscription)
+              //订阅过则无需再次订阅
+              if (subscription) {
+                return;
+              }
+
+              //订阅，浏览器显示提示
+              return registration.pushManager.subscribe({
+                  userVisibleOnly: true,
+                  applicationServerKey: determineAppServerKey()
+                })
+                .then(function(subscription) {
+                  //从subscription获取相关参数
+                  var rawKey = subscription.getKey ? subscription.getKey('p256dh') : '';
+                  key = rawKey ? btoa(String.fromCharCode.apply(null, new Uint8Array(rawKey))) : '';
+                  var rawAuthSecret = subscription.getKey ? subscription.getKey('auth') : '';
+                  authSecret = rawAuthSecret ?
+                    btoa(String.fromCharCode.apply(null, new Uint8Array(rawAuthSecret))) : '';
+
+                  endpoint = subscription.endpoint;
+
+                  return fetch('http://localhost:8086/register', {
+                    method: 'post',
+                    headers: new Headers({
+                      'content-type': 'application/json'
+                    }),
+                    body: JSON.stringify({
+                      endpoint: subscription.endpoint,
+                      key: key,
+                      authSecret: authSecret,
+                    }),
+                  })
+
+                }).catch((err)=>{
+                    console.log(err)
+                });
+            });
+
+        }).catch(function(err) {
+          console.log('错误： ', err);
+        });
+
+        navigator.serviceWorker.ready.then(function (registration) {
+          console.log(11111111)
+          let sendBtn = document.getElementById('sendBtn');
+          sendBtn.addEventListener('click', () => {
+            console.log(2222222222222)
+            let tag = 'content'
+            return registration.sync.register(tag)
+            .then(() => {
+                console.log('后台同步已触发', tag);
+                queueMessage();
+            })
+            .catch(function (err) {
+              console.log('后台同步触发失败', err);
+            });
+          });
+        });
+        navigator.serviceWorker.addEventListener('message', function(ev) {
+            if(ev.data == "reload"){
+              let r = confirm("网页已更新")
+              if( r ){
+                  location.reload();
+              }
+            }
+        });
+
+      }
+
+      // Queue the message till the sync takes place
+      function queueMessage(){
+        console.log('Message queued');
+
+        var payload = {
+          content: document.getElementById('content').value
+        };
+
+        idbKeyval.set('sendMessage', payload);
+      }
+
+      window.addEventListener('online', function() {
+          alert("上线了")
+      });
+      //
+      window.addEventListener('offline', function() {
+        alert("网络不给力")
+      });
+
+      //将VAPID密钥从Base64字符串转换成Uint8数组，因为这是VAPID规范要求的
+      function urlBase64ToUint8Array( base64String ) {
+        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+        const base64 = (base64String + padding)
+          .replace(/\-/g, '+')
+          .replace(/_/g, '/');
+
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+
+        for (let i = 0; i < rawData.length; ++i) {
+          outputArray[i] = rawData.charCodeAt(i);
+        }
+        return outputArray;
+      }
+
+
+    }
+
+    </script>
+  </body>
+</html>
