@@ -10,9 +10,10 @@
     <script>
     window.onload = function(){
       let sendBtn = document.getElementById("sendBtn");
-
-      fetch('http://localhost:8086/notice')
-      console.log('发起notice')
+  	  sendBtn.onclick = function(){
+    		fetch('http://localhost:8087/notice')
+    		console.log('发起notice')
+  	  }
     }
     </script>
   </body>

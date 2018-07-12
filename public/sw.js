@@ -1,11 +1,11 @@
 importScripts('/javascripts/idb-keyval.js');
 
-var cacheName = '103';
+var cacheName = '117';
 
 cacheSource = [
   '/javascripts/test.js?V=2',
   '/images/huoying.jpg',
-  '/stylesheets/style3.css'
+  '/stylesheets/style5.css'
 ]
 
 //用于判断用户第一次注册service worker,不提示更新
@@ -40,7 +40,7 @@ self.addEventListener('activate', event => {
     p.then(()=>{
       self.clients.matchAll().then(clientList => {
           clientList.forEach(client => {
-              client.postMessage('reload');
+              //client.postMessage('reload');
           })
       });
     })
@@ -60,7 +60,7 @@ self.addEventListener('fetch', function(event) {
       }
 
       var fetchRequest = event.request.clone();
-
+      console.log('请求：',fetchRequest)
       return fetch(fetchRequest).then(
         function(fetchResponse) {
           if(!fetchResponse || fetchResponse.status !== 200) {
@@ -69,10 +69,14 @@ self.addEventListener('fetch', function(event) {
 
           var responseToCache = fetchResponse.clone();
 
-          caches.open(cacheName)
-          .then(function(cache) {
-            cache.put(event.request, responseToCache);
-          });
+          if(checkFileExt( responseToCache.url )){
+            console.log('保存：',responseToCache.url)
+            caches.open(cacheName)
+            .then(function(cache) {
+              cache.put(event.request, responseToCache);
+            });
+          }
+
 
           return fetchResponse;
         }
@@ -81,7 +85,22 @@ self.addEventListener('fetch', function(event) {
   );
 });
 
+//检测文件后缀名
+function checkFileExt(filename){
+   var flag = false; //状态
+   var arr = ["jpg","png","gif",'css','js'];
+   //取出上传文件的扩展名
+   var index = filename.lastIndexOf(".");
+   var ext = filename.substr( index + 1 );
 
+   for( var i = 0; i < arr.length; i++ ){
+     if( ext.indexOf(arr[i]) > 0 ){
+      flag = true;
+      break;
+     }
+   }
+   return flag;
+}
 // The sync event for the contact form
 self.addEventListener('sync', function (event) {
   console.log(333333333,event.tag)

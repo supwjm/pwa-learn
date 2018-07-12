@@ -64,12 +64,12 @@ app.post('/register', function (req, res) {
   res.send({status:0,mes:"订阅成功"});
 
   // var body = '谢谢关注';
-  // var iconUrl = 'http://localhost:8086/images/huiju.png';
+  // var iconUrl = 'http://localhost:8087/images/huiju.png';
   //
   // webpush.sendNotification(pushSubscription,
   //   JSON.stringify({
   //     msg: body,
-  //     url: 'http://localhost:8086',
+  //     url: 'http://localhost:8087',
   //     icon: iconUrl,
   //     type: 'register'
   //   }))
@@ -87,12 +87,12 @@ app.get('/notice', function (req, res) {
   let pushSubscription = JSON.parse(fs.readFileSync('pushSubscription.txt'));
 
   var body = '谢谢关注';
-  var iconUrl = 'http://localhost:8086/images/huiju.png';
+  var iconUrl = 'http://localhost:8087/images/huiju.png';
 
   webpush.sendNotification(pushSubscription,
     JSON.stringify({
       msg: body,
-      url: 'http://localhost:8086',
+      url: 'http://localhost:8087',
       icon: iconUrl,
       type: 'register'
     }))

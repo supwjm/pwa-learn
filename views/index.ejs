@@ -2,7 +2,7 @@
 <html>
   <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style3.css?v=4' />
+    <link rel='stylesheet' href='/stylesheets/style6.css' />
     <link rel="manifest" href="/manifest.json">
   </head>
   <body>
@@ -60,7 +60,7 @@
 
                   endpoint = subscription.endpoint;
 
-                  return fetch('http://localhost:8086/register', {
+                  return fetch('http://localhost:8087/register', {
                     method: 'post',
                     headers: new Headers({
                       'content-type': 'application/json'
