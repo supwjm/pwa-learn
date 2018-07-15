@@ -148,6 +148,6 @@ self.addEventListener('push', function (event) {
 
 self.addEventListener('notificationclick', function (event) {
   event.notification.close();
-  clients.openWindow('http://localhost:8080');
+  clients.openWindow('http://localhost:8087');
 
 }, false);
