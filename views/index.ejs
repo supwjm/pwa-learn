@@ -6,15 +6,19 @@
     <link rel="manifest" href="/manifest.json">
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p><%= title %>  ming</p>
+    <header><%= title %> 搭建 PWA DEMO</header>
+    <figure>
+      <img src="/images/huoying.jpg"/>
+      <figcaption id="title"></figcaption>
+    </figure>
 
-    <form>
+
+    <form style="visibility:hidden;">
       <p> 说话： <input type="text" name="content"  id="content"/></p>
       <input type="button" value="提交" id="sendBtn"/>
     </form>
 
-    <img src="/images/huoying.jpg"/>
+
 
     <script src="/javascripts/test.js"></script>
     <script src="/javascripts/idb-keyval.js"></script>

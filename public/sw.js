@@ -5,7 +5,7 @@ var cacheName = '117';
 cacheSource = [
   '/javascripts/test.js?V=2',
   '/images/huoying.jpg',
-  '/stylesheets/style5.css'
+  '/stylesheets/style6.css'
 ]
 
 //用于判断用户第一次注册service worker,不提示更新
